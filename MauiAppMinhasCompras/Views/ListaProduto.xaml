@@ -2,11 +2,52 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiAppMinhasCompras.Views.ListaProduto"
-             Title="ListaProduto">
+             Title="Minhas Compras">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Somar" Clicked="ToolbarItem_Clicked_Somar"/>
+        <ToolbarItem Text="Adicionar" Clicked="ToolbarItem_Clicked_Adicionar" />
+    </ContentPage.ToolbarItems>
+
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Grid RowDefinitions="Auto, *">
+            <SearchBar x:Name="txt_search"
+                   Placeholder="Pesquisar produto"
+                   TextChanged="txt_search_TextChanged"
+                   Grid.Row="0" />
+
+            <CollectionView x:Name="lst_produtos" Grid.Row="1">
+                <CollectionView.Header>
+                    <Grid ColumnDefinitions="*, *, *, *, *, *" Padding="10">
+                        <Label Text="ID" Grid.Column="0" FontAttributes="Bold" />
+                        <Label Text="Descricao" Grid.Column="1" FontAttributes="Bold" />
+                        <Label Text="Preço" Grid.Column="2" FontAttributes="Bold" />
+                        <Label Text="Quantidade" Grid.Column="3" FontAttributes="Bold" />
+                        <Label Text="Total" Grid.Column="4" FontAttributes="Bold" />
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Remover" 
+                                           BackgroundColor="Red" 
+                                           Clicked="MenuItem_Clicked_Remover"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Grid ColumnDefinitions="*, *, *, *, *, *" Padding="10" BackgroundColor="Transparent">
+                                <Label Text="{Binding Id}" Grid.Column="0" />
+                                <Label Text="{Binding Descricao}" Grid.Column="1" />
+                                <Label Text="{Binding Preco}" Grid.Column="2" />
+                                <Label Text="{Binding Quantidade}" Grid.Column="3" />
+                                <Label Text="{Binding Total}" Grid.Column="4" />
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
     </VerticalStackLayout>
 </ContentPage>
