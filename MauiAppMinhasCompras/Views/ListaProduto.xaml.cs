@@ -5,50 +5,74 @@ namespace MauiAppMinhasCompras.Views;
 
 public partial class ListaProduto : ContentPage
 {
-	ObservableCollection<Produto> lista = new ObservableCollection<Produto>();
+    ObservableCollection<Produto> lista = new ObservableCollection<Produto>();
 
-	public ListaProduto()
-	{
-		InitializeComponent();
-
-		lst_produtos.ItemsSource = lista;
-    }
-
-	protected async override void OnAppearing()
-	{
-		List<Produto> tmp = await App.Database.GetAll();
-		tmp.ForEach(p => lista.Add(p));
-    }
-
-    private void ToolbarItem_Clicked_Adicionar(object sender, EventArgs e)
+    public ListaProduto()
     {
-		try
-		{
-			Navigation.PushAsync(new Views.NovoProduto());
-		} catch (Exception ex)
-		{
-			DisplayAlertAsync("Ops", $"Algo deu errado: {ex.Message}", "OK");
+        InitializeComponent();
+        lst_produtos.ItemsSource = lista;
+    }
+
+    protected async override void OnAppearing()
+    {
+        try
+        {
+            // Clear the list first so items don't duplicate when returning to this page
+            lista.Clear();
+
+            List<Produto> tmp = await App.Database.GetAll();
+            tmp.ForEach(p => lista.Add(p));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro", $"Falha ao carregar os produtos: {ex.Message}", "OK");
+        }
+    }
+
+    private async void ToolbarItem_Clicked_Adicionar(object sender, EventArgs e)
+    {
+        try
+        {
+            await Navigation.PushAsync(new Views.NovoProduto());
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", $"Algo deu errado ao abrir a tela: {ex.Message}", "OK");
         }
     }
 
     private async void txt_search_TextChanged(object sender, TextChangedEventArgs e)
     {
-		string querry = e.NewTextValue;
+        try
+        {
+            string querry = e.NewTextValue;
 
-		lista.Clear();
+            lista.Clear();
 
-		List<Produto> tmp = await App.Database.Search(querry);
+            List<Produto> tmp = await App.Database.Search(querry);
 
-		tmp.ForEach(i => lista.Add(i));
+            tmp.ForEach(i => lista.Add(i));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro", $"Falha ao buscar produtos: {ex.Message}", "OK");
+        }
     }
 
-    private void ToolbarItem_Clicked_Somar(object sender, EventArgs e)
+    private async void ToolbarItem_Clicked_Somar(object sender, EventArgs e)
     {
-		double soma = lista.Sum(i => i.Total);
+        try
+        {
+            double soma = lista.Sum(i => i.Total);
 
-		string msg = $"O valor total dos produtos é: {soma:C}";
+            string msg = $"O valor total dos produtos é: {soma:C}";
 
-		DisplayAlertAsync("Soma dos Produtos", msg, "OK");
+            await DisplayAlertAsync("Soma dos Produtos", msg, "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro", $"Falha ao calcular a soma: {ex.Message}", "OK");
+        }
     }
 
     private async void MenuItem_Clicked_Remover(object sender, EventArgs e)
