@@ -18,7 +18,7 @@
 
             <CollectionView x:Name="lst_produtos" Grid.Row="1">
                 <CollectionView.Header>
-                    <Grid ColumnDefinitions="*, *, *, *, *, *" Padding="10">
+                    <Grid ColumnDefinitions="*, *, *, *, *" Padding="10">
                         <Label Text="ID" Grid.Column="0" FontAttributes="Bold" />
                         <Label Text="Descricao" Grid.Column="1" FontAttributes="Bold" />
                         <Label Text="Preço" Grid.Column="2" FontAttributes="Bold" />
