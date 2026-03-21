@@ -37,7 +37,7 @@
                                 </SwipeItems>
                             </SwipeView.RightItems>
 
-                            <Grid ColumnDefinitions="*, *, *, *, *, *" Padding="10" BackgroundColor="Transparent">
+                            <Grid ColumnDefinitions="*, *, *, *, *" Padding="10" BackgroundColor="Transparent">
                                 <Label Text="{Binding Id}" Grid.Column="0" />
                                 <Label Text="{Binding Descricao}" Grid.Column="1" />
                                 <Label Text="{Binding Preco}" Grid.Column="2" />
