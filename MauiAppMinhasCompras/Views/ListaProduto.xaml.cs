@@ -10,26 +10,26 @@ public partial class ListaProduto : ContentPage
     public ListaProduto()
     {
         InitializeComponent();
-        lst_produtos.ItemsSource = lista;
+        Lista_produtos.ItemsSource = lista;
     }
 
     protected async override void OnAppearing()
     {
         try
         {
-            // Clear the list first so items don't duplicate when returning to this page
             lista.Clear();
 
             List<Produto> tmp = await App.Database.GetAll();
-            tmp.ForEach(p => lista.Add(p));
+
+            tmp.ForEach(i => lista.Add(i));
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Erro", $"Falha ao carregar os produtos: {ex.Message}", "OK");
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
         }
     }
 
-    private async void ToolbarItem_Clicked_Adicionar(object sender, EventArgs e)
+    private async void ToolbarItem_Clicked(object sender, EventArgs e)
     {
         try
         {
@@ -37,7 +37,7 @@ public partial class ListaProduto : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Ops", $"Algo deu errado ao abrir a tela: {ex.Message}", "OK");
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
         }
     }
 
@@ -45,63 +45,75 @@ public partial class ListaProduto : ContentPage
     {
         try
         {
-            string querry = e.NewTextValue;
+            string q = e.NewTextValue;
 
             lista.Clear();
 
-            List<Produto> tmp = await App.Database.Search(querry);
+            List<Produto> tmp = await App.Database.Search(q);
 
             tmp.ForEach(i => lista.Add(i));
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Erro", $"Falha ao buscar produtos: {ex.Message}", "OK");
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
         }
     }
 
-    private async void ToolbarItem_Clicked_Somar(object sender, EventArgs e)
+    private async void ToolbarItem_Clicked_1(object sender, EventArgs e)
     {
-        try
-        {
-            double soma = lista.Sum(i => i.Total);
+        double soma = lista.Sum(i => i.Total);
 
-            string msg = $"O valor total dos produtos é: {soma:C}";
+        string msg = $"O total é {soma:C}";
 
-            await DisplayAlertAsync("Soma dos Produtos", msg, "OK");
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlertAsync("Erro", $"Falha ao calcular a soma: {ex.Message}", "OK");
-        }
+        await DisplayAlertAsync("Total dos Produtos", msg, "OK");
     }
 
-    private async void MenuItem_Clicked_Remover(object sender, EventArgs e)
+    private async void MenuItem_Clicked(object sender, EventArgs e)
     {
         try
         {
-            // Identifica o componente que disparou o clique
-            var swipeItem = sender as SwipeItem;
+            // Utiliza o MenuFlyoutItem ao invés do MenuItem para acessar o BindingContext do item clicado
+            MenuFlyoutItem selecionado = sender as MenuFlyoutItem;
 
-            // Extrai o Produto do BindingContext
-            if (swipeItem?.BindingContext is Produto produtoParaRemover)
+            Produto p = selecionado.BindingContext as Produto;
+
+            bool confirm = await DisplayAlertAsync(
+                "Tem Certeza?", $"Remover {p.Descricao}?", "Sim", "Não");
+
+            if (confirm)
             {
-                bool confirmacao = await DisplayAlertAsync("Remover Produto",
-                                                    $"Tem certeza que deseja remover '{produtoParaRemover.Descricao}'?",
-                                                    "Sim", "Não");
-
-                if (confirmacao)
-                {
-                    // Remove o produto do Banco de Dados
-                    await App.Database.Delete(produtoParaRemover.Id);
-
-                    // Remove o produto da lista visível na tela
-                    lista.Remove(produtoParaRemover);
-                }
+                // Deleta do banco e da lista para atualizar a tela
+                await App.Database.Delete(p.Id);
+                lista.Remove(p);
             }
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Ops", $"Algo deu errado ao remover: {ex.Message}", "OK");
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
+    }
+
+    // Com CollectionView, utilizei o SelectionChanged para capturar o clique no item
+    private async void List_Produtos_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        try
+        {
+            // Pega o primeiro item selecionado
+            if (e.CurrentSelection.FirstOrDefault() is Produto p) // Checa se é um Produto para evitar erros caso a seleção seja nula ou de outro tipo
+            {
+                // Navega para a tela de edição passando o produto selecionado como BindingContext
+                await Navigation.PushAsync(new Views.EditarProduto
+                {
+                    BindingContext = p,
+                });
+
+                // Limpa a seleção para que o item não fique marcado quando voltar para esta tela
+                Lista_produtos.SelectedItem = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
         }
     }
 }

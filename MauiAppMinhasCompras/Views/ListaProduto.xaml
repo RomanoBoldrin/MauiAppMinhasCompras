@@ -5,46 +5,47 @@
              Title="Minhas Compras">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Somar" Clicked="ToolbarItem_Clicked_Somar"/>
-        <ToolbarItem Text="Adicionar" Clicked="ToolbarItem_Clicked_Adicionar" />
+        <ToolbarItem Text="Somar" Clicked="ToolbarItem_Clicked_1" />
+        <ToolbarItem Text="Adicionar" Clicked="ToolbarItem_Clicked" />
     </ContentPage.ToolbarItems>
 
     <VerticalStackLayout>
         <Grid RowDefinitions="Auto, *">
-            <SearchBar x:Name="txt_search"
-                   Placeholder="Pesquisar produto"
-                   TextChanged="txt_search_TextChanged"
-                   Grid.Row="0" />
+            <SearchBar x:Name="txt_search" 
+                       Placeholder="Busca de Produtos"
+                       TextChanged="txt_search_TextChanged"
+                       Grid.Row="0"/>
 
-            <CollectionView x:Name="lst_produtos" Grid.Row="1">
+            <CollectionView x:Name="Lista_produtos" 
+                            Grid.Row="1"
+                            SelectionMode="Single"
+                            SelectionChanged="List_Produtos_SelectionChanged">
                 <CollectionView.Header>
                     <Grid ColumnDefinitions="*, *, *, *, *" Padding="10">
-                        <Label Text="ID" Grid.Column="0" FontAttributes="Bold" />
-                        <Label Text="Descricao" Grid.Column="1" FontAttributes="Bold" />
-                        <Label Text="Preço" Grid.Column="2" FontAttributes="Bold" />
-                        <Label Text="Quantidade" Grid.Column="3" FontAttributes="Bold" />
-                        <Label Text="Total" Grid.Column="4" FontAttributes="Bold" />
+                        <Label Grid.Column="0" Text="ID" FontAttributes="Bold" />
+                        <Label Grid.Column="1" Text="Descrição" FontAttributes="Bold" />
+                        <Label Grid.Column="2" Text="Preço" FontAttributes="Bold" />
+                        <Label Grid.Column="3" Text="Qnt" FontAttributes="Bold" />
+                        <Label Grid.Column="4" Text="Total" FontAttributes="Bold" />
                     </Grid>
                 </CollectionView.Header>
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <SwipeView>
-                            <SwipeView.RightItems>
-                                <SwipeItems>
-                                    <SwipeItem Text="Remover" 
-                                           BackgroundColor="Red" 
-                                           Clicked="MenuItem_Clicked_Remover"/>
-                                </SwipeItems>
-                            </SwipeView.RightItems>
+                        <Grid ColumnDefinitions="*, *, *, *, *" Padding="10" BackgroundColor="Transparent">
 
-                            <Grid ColumnDefinitions="*, *, *, *, *" Padding="10" BackgroundColor="Transparent">
-                                <Label Text="{Binding Id}" Grid.Column="0" />
-                                <Label Text="{Binding Descricao}" Grid.Column="1" />
-                                <Label Text="{Binding Preco}" Grid.Column="2" />
-                                <Label Text="{Binding Quantidade}" Grid.Column="3" />
-                                <Label Text="{Binding Total}" Grid.Column="4" />
-                            </Grid>
-                        </SwipeView>
+                            <FlyoutBase.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Remover" Clicked="MenuItem_Clicked" />
+                                </MenuFlyout>
+                            </FlyoutBase.ContextFlyout>
+
+                            <Label Grid.Column="0" Text="{Binding Id}" />
+                            <Label Grid.Column="1" Text="{Binding Descricao}" />
+                            <Label Grid.Column="2" Text="{Binding Preco}" />
+                            <Label Grid.Column="3" Text="{Binding Quantidade}" />
+                            <Label Grid.Column="4" Text="{Binding Total}" />
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
