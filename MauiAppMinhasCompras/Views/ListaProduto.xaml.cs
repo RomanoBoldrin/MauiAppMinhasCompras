@@ -61,11 +61,18 @@ public partial class ListaProduto : ContentPage
 
     private async void ToolbarItem_Clicked_1(object sender, EventArgs e)
     {
-        double soma = lista.Sum(i => i.Total);
+        try
+        {
+            double soma = lista.Sum(i => i.Total);
 
-        string msg = $"O total é {soma:C}";
+            string msg = $"O total é {soma:C}";
 
-        await DisplayAlertAsync("Total dos Produtos", msg, "OK");
+            await DisplayAlertAsync("Total dos Produtos", msg, "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
     }
 
     private async void MenuItem_Clicked(object sender, EventArgs e)
