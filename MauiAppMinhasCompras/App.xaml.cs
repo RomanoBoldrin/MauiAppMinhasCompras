@@ -23,6 +23,8 @@ namespace MauiAppMinhasCompras
         public App()
         {
             InitializeComponent();
+
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("pt-BR");
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
