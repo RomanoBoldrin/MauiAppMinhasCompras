@@ -9,46 +9,70 @@
         <ToolbarItem Text="Adicionar" Clicked="ToolbarItem_Clicked" />
     </ContentPage.ToolbarItems>
 
-    <VerticalStackLayout>
-        <Grid RowDefinitions="Auto, *">
-            <SearchBar x:Name="txt_search" 
-                       Placeholder="Busca de Produtos"
-                       TextChanged="txt_search_TextChanged"
-                       Grid.Row="0"/>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-            <CollectionView x:Name="Lista_produtos" 
-                            Grid.Row="1"
-                            SelectionMode="Single"
-                            SelectionChanged="List_Produtos_SelectionChanged">
-                <CollectionView.Header>
-                    <Grid ColumnDefinitions="*, *, *, *, *" Padding="10">
-                        <Label Grid.Column="0" Text="ID" FontAttributes="Bold" />
-                        <Label Grid.Column="1" Text="Descrição" FontAttributes="Bold" />
-                        <Label Grid.Column="2" Text="Preço" FontAttributes="Bold" />
-                        <Label Grid.Column="3" Text="Qnt" FontAttributes="Bold" />
-                        <Label Grid.Column="4" Text="Total" FontAttributes="Bold" />
-                    </Grid>
-                </CollectionView.Header>
+    <Grid RowDefinitions="Auto, *">
 
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid ColumnDefinitions="*, *, *, *, *" Padding="10" BackgroundColor="Transparent">
+        <SearchBar x:Name="txt_search" 
+                   Grid.Row="0"
+                   Margin="-15, 0, 0, 0"
+                   Placeholder="Busca de Produtos"
+                   TextChanged="txt_search_TextChanged" />
 
-                            <FlyoutBase.ContextFlyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem Text="Remover" Clicked="MenuItem_Clicked" />
-                                </MenuFlyout>
-                            </FlyoutBase.ContextFlyout>
+        <Border Grid.Row="1"
+                Padding="0" 
+                Margin="10"
+                StrokeThickness="1"
+                Stroke="{StaticResource Gray200}">
 
-                            <Label Grid.Column="0" Text="{Binding Id}" />
-                            <Label Grid.Column="1" Text="{Binding Descricao}" />
-                            <Label Grid.Column="2" Text="{Binding Preco}" />
-                            <Label Grid.Column="3" Text="{Binding Quantidade}" />
-                            <Label Grid.Column="4" Text="{Binding Total}" />
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="8" />
+            </Border.StrokeShape>
+
+            <RefreshView x:Name="refresh_view" Refreshing="refresh_view_Refreshing">
+
+                <CollectionView x:Name="Lista_produtos" 
+                                SelectionMode="Single"
+                                SelectionChanged="List_Produtos_SelectionChanged">
+
+                    <CollectionView.Header>
+                        <Grid ColumnDefinitions="30, 100, 80, 50, 90" 
+                              BackgroundColor="{StaticResource Gray100}">
+                            <Label Grid.Column="0" Text="ID" Padding="5" FontAttributes="Bold" />
+                            <Label Grid.Column="1" Text="Descrição" FontAttributes="Bold" />
+                            <Label Grid.Column="2" Text="Preço" FontAttributes="Bold" />
+                            <Label Grid.Column="3" Text="Qnt" FontAttributes="Bold" />
+                            <Label Grid.Column="4" Text="Total" FontAttributes="Bold" />
                         </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </Grid>
-    </VerticalStackLayout>
+                    </CollectionView.Header>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="30, 100, 80, 50, 90" BackgroundColor="Transparent">
+
+                                <FlyoutBase.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Remover" Clicked="MenuItem_Clicked" />
+                                    </MenuFlyout>
+                                </FlyoutBase.ContextFlyout>
+
+                                <Label Grid.Column="0" Text="{Binding Id}" Padding="5" />
+                                <Label Grid.Column="1" Text="{Binding Descricao}" />
+                                <Label Grid.Column="2" Text="{Binding Preco, StringFormat='{}{0:c}'}" />
+                                <Label Grid.Column="3" Text="{Binding Quantidade}" />
+                                <Label Grid.Column="4" Text="{Binding Total, StringFormat='{}{0:c}'}" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </RefreshView>
+        </Border>
+    </Grid>
 </ContentPage>
