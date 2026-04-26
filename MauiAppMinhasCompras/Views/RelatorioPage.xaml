@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:MauiAppMinhasCompras.Models"
+             x:Class="MauiAppMinhasCompras.Views.RelatorioPage"
+             Title="Relatório de Compras">
+
+    <Grid RowDefinitions="Auto, Auto, *" Padding="15" RowSpacing="15">
+
+        <Border Grid.Row="0" 
+                Padding="15" 
+                BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                StrokeThickness="0">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10" />
+            </Border.StrokeShape>
+
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,2" Radius="4" Opacity="0.15" />
+            </Border.Shadow>
+
+            <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *" ColumnSpacing="15" RowSpacing="5">
+                <Label Grid.Row="0" Grid.Column="0" Text="Data Inicial:" FontAttributes="Bold" />
+                <DatePicker Grid.Row="1" Grid.Column="0" x:Name="dtp_inicio" Format="dd/MM/yyyy" />
+
+                <Label Grid.Row="0" Grid.Column="1" Text="Data Final:" FontAttributes="Bold" />
+                <DatePicker Grid.Row="1" Grid.Column="1" x:Name="dtp_fim" Format="dd/MM/yyyy" />
+            </Grid>
+        </Border>
+
+        <Button Grid.Row="1" 
+                Text="Filtrar Resultados" 
+                Clicked="btn_filtrar_Clicked" 
+                BackgroundColor="#2B0B98" 
+                TextColor="White" 
+                FontAttributes="Bold" 
+                CornerRadius="8" />
+
+        <CollectionView Grid.Row="2" x:Name="cv_relatorio">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="30">
+                    <Label Text="📅" FontSize="60" HorizontalOptions="Center"/>
+                    <Label Text="Nenhum produto encontrado no período." 
+                           HorizontalOptions="Center" 
+                           TextColor="Gray" 
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Produto">
+
+                    <Border Margin="0,0,0,10" 
+                            Padding="15" 
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#252526}"
+                            StrokeThickness="0">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,2" Radius="4" Opacity="0.15" />
+                        </Border.Shadow>
+
+                        <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, Auto" RowSpacing="5">
+                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding Descricao}" FontSize="18" FontAttributes="Bold" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding DataCadastro, StringFormat='{0:dd/MM/yyyy}'}" FontSize="14" TextColor="Gray" VerticalOptions="Center" />
+
+                            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="*, *, *" Margin="0,5,0,0">
+                                <Label Grid.Column="0" Text="{Binding Preco, StringFormat='Preço: {0:C}'}" FontSize="13" />
+                                <Label Grid.Column="1" Text="{Binding Quantidade, StringFormat='Qtd: {0}'}" FontSize="13" HorizontalOptions="Center"/>
+                                <Label Grid.Column="2" Text="{Binding Total, StringFormat='Total: {0:C}'}" FontSize="14" FontAttributes="Bold" TextColor="DarkGreen" HorizontalOptions="End"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using System; // Adicionado para suportar o DateTime
 
 namespace MauiAppMinhasCompras.Models
 {
@@ -16,10 +17,9 @@ namespace MauiAppMinhasCompras.Models
             get => _descricao;
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new Exception("Por favor, preencha a descrição");
-
-                _descricao = value;
+                // Allow deserialization/ORM to set the property without throwing.
+                // Normalize nulls to empty string to avoid null reference issues in bindings.
+                _descricao = value?.Trim() ?? string.Empty;
             }
         }
 
@@ -28,9 +28,7 @@ namespace MauiAppMinhasCompras.Models
             get => _quantidade;
             set
             {
-                if (value <= 0)
-                    throw new Exception("A quantidade deve ser maior que zero");
-
+                // Allow ORM/deserialization to set default numeric values (0).
                 _quantidade = value;
             }
         }
@@ -40,13 +38,25 @@ namespace MauiAppMinhasCompras.Models
             get => _preco;
             set
             {
-                if (value <= 0)
-                    throw new Exception("O preço deve ser maior que zero");
-
+                // Allow ORM/deserialization to set default numeric values (0).
                 _preco = value;
             }
         }
 
         public double Total { get => Quantidade * Preco; }
+
+        // NOVA PROPRIEDADE ADICIONADA
+        public DateTime DataCadastro { get; set; }
+
+        // Explicit validation to be called before saving a product.
+        public void ValidateForSave()
+        {
+            if (string.IsNullOrWhiteSpace(Descricao))
+                throw new Exception("Por favor, preencha a descrição");
+            if (Quantidade <= 0)
+                throw new Exception("A quantidade deve ser maior que zero");
+            if (Preco <= 0)
+                throw new Exception("O preço deve ser maior que zero");
+        }
     }
 }

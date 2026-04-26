@@ -23,6 +23,9 @@ public partial class EditarProduto : ContentPage
                 Preco = Convert.ToDouble(txt_valorUnitario.Text)
             };
 
+            // Validate before updating
+            produto.ValidateForSave();
+
             await App.Database.Update(produto);
             await DisplayAlertAsync("Sucesso!", "Registro Atualizado.", "OK");
             await Navigation.PopAsync();

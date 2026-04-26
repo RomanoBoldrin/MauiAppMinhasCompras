@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:MauiAppMinhasCompras.Models" 
              x:Class="MauiAppMinhasCompras.Views.ListaProduto"
              Title="Minhas Compras">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Somar" Clicked="ToolbarItem_Clicked_1" />
         <ToolbarItem Text="Adicionar" Clicked="ToolbarItem_Clicked" />
+        <ToolbarItem Text="Relatório" Clicked="ToolbarItem_Relatorio_Clicked" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style TargetType="Label">
+            <!-- Inherit from the app-wide base label style so we don't lose TextColor settings -->
+            <Style TargetType="Label" BasedOn="{StaticResource BaseLabelStyle}">
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
         </ResourceDictionary>
@@ -21,7 +24,7 @@
 
         <SearchBar x:Name="txt_search" 
                    Grid.Row="0"
-                   Margin="-15, 0, 0, 0"
+                   Margin="10, 10, 10, 0"
                    Placeholder="Busca de Produtos"
                    TextChanged="txt_search_TextChanged" />
 
@@ -43,7 +46,7 @@
 
                     <CollectionView.Header>
                         <Grid ColumnDefinitions="30, 100, 80, 50, 90" 
-                              BackgroundColor="{StaticResource Gray100}">
+                              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark=#2A2A2A}">
                             <Label Grid.Column="0" Text="ID" Padding="5" FontAttributes="Bold" />
                             <Label Grid.Column="1" Text="Descrição" FontAttributes="Bold" />
                             <Label Grid.Column="2" Text="Preço" FontAttributes="Bold" />
@@ -53,7 +56,7 @@
                     </CollectionView.Header>
 
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Produto">
                             <Grid ColumnDefinitions="30, 100, 80, 50, 90" BackgroundColor="Transparent">
 
                                 <FlyoutBase.ContextFlyout>
@@ -62,11 +65,11 @@
                                     </MenuFlyout>
                                 </FlyoutBase.ContextFlyout>
 
-                                <Label Grid.Column="0" Text="{Binding Id}" Padding="5" />
-                                <Label Grid.Column="1" Text="{Binding Descricao}" />
-                                <Label Grid.Column="2" Text="{Binding Preco, StringFormat='{}{0:c}'}" />
-                                <Label Grid.Column="3" Text="{Binding Quantidade}" />
-                                <Label Grid.Column="4" Text="{Binding Total, StringFormat='{}{0:c}'}" />
+                                <Label Grid.Column="0" Text="{Binding Id}" Padding="5" TextColor="White" />
+                                <Label Grid.Column="1" Text="{Binding Descricao}" TextColor="White" />
+                                <Label Grid.Column="2" Text="{Binding Preco, StringFormat='{}{0:c}'}" TextColor="White" />
+                                <Label Grid.Column="3" Text="{Binding Quantidade}" TextColor="White"/>
+                                <Label Grid.Column="4" Text="{Binding Total, StringFormat='{}{0:c}'}" TextColor="White" />
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -76,3 +79,4 @@
         </Border>
     </Grid>
 </ContentPage>
+    

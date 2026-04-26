@@ -41,6 +41,19 @@ public partial class ListaProduto : ContentPage
         }
     }
 
+    // NOVO MÉTODO: Navegação para a tela de Relatório
+    private async void ToolbarItem_Relatorio_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            await Navigation.PushAsync(new Views.RelatorioPage());
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
+    }
+
     private async void txt_search_TextChanged(object sender, TextChangedEventArgs e)
     {
         try
